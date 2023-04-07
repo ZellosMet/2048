@@ -16,8 +16,8 @@ const int SIZE = 4;
 void Print_Grid(int grid[SIZE][SIZE], int SIZE); // Функция вывода сетки
 void Move_Up(int grid[SIZE][SIZE], int SIZE); //Функции перемещения пустого блока
 void Move_Down(int grid[SIZE][SIZE], int SIZE);
-void Move_Right(int grid[SIZE][SIZE], int SIZE, int* pemp_i, int* pemp_j);
-void Move_Left(int grid[SIZE][SIZE], int SIZE, int* pemp_i, int* pemp_j);
+void Move_Right(int grid[SIZE][SIZE], int SIZE);
+void Move_Left(int grid[SIZE][SIZE], int SIZE);
 
 void test(int grid[SIZE][SIZE], int SIZE)
 {
@@ -50,10 +50,10 @@ void main()
 		control = _getch();
 		switch (control)
 		{
-		case MOVE_UP: Move_Up(grid, SIZE); Print_Grid(grid, SIZE); break;
-		case MOVE_DOWN: Move_Down(grid, SIZE); Print_Grid(grid, SIZE); break;
-		case MOVE_RIGHT: ; break;
-		case MOVE_LEFT: ; break;
+		case MOVE_UP: Move_Up(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); break;
+		case MOVE_DOWN: Move_Down(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); break;
+		case MOVE_RIGHT: Move_Right(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); break;
+		case MOVE_LEFT: Move_Left(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); ; break;
 		case ENTER: Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); break;
 		}
 	} while (control != ESC);
@@ -66,12 +66,23 @@ void Print_Grid(int grid[SIZE][SIZE], int SIZE)
 	{
 		for (int j = 0; j < SIZE; j++)
 		{
-			if (grid[i][j] == 0) cout << "[  ] ";
-			else if (grid[i][j] < 10) cout << "[ " << grid[i][j] << "] ";
-			else if (grid[i][j] >= 10) cout << "[" << grid[i][j] << "] ";
+			if (grid[i][j] == 0) cout << "[     ] ";
+			else if (grid[i][j] < 10) cout << "[    " << grid[i][j] << "] ";
+			else if (grid[i][j] >= 10 && grid[i][j] < 100) cout << "[   " << grid[i][j] << "] ";
+			else if (grid[i][j] >= 100 && grid[i][j] < 1000) cout << "[  " << grid[i][j] << "] ";
+			else if (grid[i][j] >= 1000 && grid[i][j] < 10000) cout << "[ " << grid[i][j] << "] ";
+			else cout << "[" << grid[i][j] << "] ";
 		}
 		cout << endl;
 	}
+}
+
+void Block_Generation(int grid[SIZE][SIZE], int SIZE)
+{	
+	int position_i = rand() % 4;
+	int position_j = rand() % 4;
+	int block = (rand() % 10) <= 0 ? 4 : 2;
+	if (grid[position_i][position_j]==0) grid[position_i][position_j] = block;
 }
 
 void Move_Up(int grid[SIZE][SIZE], int SIZE)
@@ -82,6 +93,11 @@ void Move_Up(int grid[SIZE][SIZE], int SIZE)
 		{
 			for (int j = 0; j < SIZE; j++)
 			{
+				if (grid[i - 1][j] == grid[i][j])
+				{
+					grid[i - 1][j] += grid[i][j];
+					grid[i][j] = 0;
+				}
 				if (grid[i - 1][j] == 0)
 				{
 					grid[i - 1][j] ^= grid[i][j];
@@ -100,6 +116,11 @@ void Move_Down(int grid[SIZE][SIZE], int SIZE)
 		{
 			for (int j = SIZE-1; j >= 0; j--)
 			{
+				if (grid[i + 1][j] == grid[i][j])
+				{
+					grid[i + 1][j] += grid[i][j];
+					grid[i][j] = 0;
+				}
 				if (grid[i + 1][j] == 0)
 				{
 					grid[i + 1][j] ^= grid[i][j];
@@ -110,31 +131,49 @@ void Move_Down(int grid[SIZE][SIZE], int SIZE)
 		}
 	}
 }
-void Move_Right(int grid[SIZE][SIZE], int SIZE, int* pemp_i, int* pemp_j)
+void Move_Right(int grid[SIZE][SIZE], int SIZE)
 {
-	if (*pemp_j != SIZE - 1)
+	for (int k = 0; k < SIZE - 1; k++)
 	{
-		grid[*pemp_i][(*pemp_j) + 1] ^= grid[*pemp_i][*pemp_j];
-		grid[*pemp_i][*pemp_j] ^= grid[*pemp_i][(*pemp_j) + 1];
-		grid[*pemp_i][(*pemp_j) + 1] ^= grid[*pemp_i][*pemp_j];
-		*pemp_j = *pemp_j + 1;
+		for (int i = 0; i < SIZE; i++)
+		{
+			for (int j = SIZE-2; j >=0 ; j--)
+			{
+				if (grid[i][j+1] == grid[i][j])
+				{
+					grid[i][j+1] += grid[i][j];
+					grid[i][j] = 0;
+				}
+				if (grid[i][j+1] == 0)
+				{
+					grid[i][j+1] ^= grid[i][j];
+					grid[i][j] ^= grid[i][j+1];
+					grid[i][j+1] ^= grid[i][j];
+				}
+			}
+		}
 	}
 }
-void Move_Left(int grid[SIZE][SIZE], int SIZE, int* pemp_i, int* pemp_j)
+void Move_Left(int grid[SIZE][SIZE], int SIZE)
 {
-	if (*pemp_j != 0)
+	for (int k = 0; k < SIZE - 1; k++)
 	{
-		grid[*pemp_i][(*pemp_j) - 1] ^= grid[*pemp_i][*pemp_j];
-		grid[*pemp_i][*pemp_j] ^= grid[*pemp_i][(*pemp_j) - 1];
-		grid[*pemp_i][(*pemp_j) - 1] ^= grid[*pemp_i][*pemp_j];
-		*pemp_j = *pemp_j - 1;
+		for (int i = 0; i < SIZE; i++)
+		{
+			for (int j = 1; j < SIZE; j++)
+			{
+				if (grid[i][j - 1] == grid[i][j])
+				{
+					grid[i][j - 1] += grid[i][j];
+					grid[i][j] = 0;
+				}
+				if (grid[i][j - 1] == 0)
+				{
+					grid[i][j - 1] ^= grid[i][j];
+					grid[i][j] ^= grid[i][j - 1];
+					grid[i][j - 1] ^= grid[i][j];
+				}
+			}
+		}
 	}
-}
-
-void Block_Generation(int grid[SIZE][SIZE], int SIZE)
-{	
-	int position_i = rand() % 4;
-	int position_j = rand() % 4;
-	int block = (rand() % 10) <= 0 ? 4 : 2;
-	if (grid[position_i][position_j]==0) grid[position_i][position_j] = block;
 }
