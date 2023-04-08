@@ -14,10 +14,11 @@ using namespace std;
 const int SIZE = 4;
 
 void Print_Grid(int grid[SIZE][SIZE], int SIZE); // Функция вывода сетки
-void Move_Up(int grid[SIZE][SIZE], int SIZE); //Функции перемещения пустого блока
+void Move_Up(int grid[SIZE][SIZE], int SIZE); //Функции смещения
 void Move_Down(int grid[SIZE][SIZE], int SIZE);
 void Move_Right(int grid[SIZE][SIZE], int SIZE);
 void Move_Left(int grid[SIZE][SIZE], int SIZE);
+int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE); //Функция проверки на проигрыш
 
 void test(int grid[SIZE][SIZE], int SIZE)
 {
@@ -50,11 +51,11 @@ void main()
 		control = _getch();
 		switch (control)
 		{
-		case MOVE_UP: Move_Up(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); break;
-		case MOVE_DOWN: Move_Down(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); break;
-		case MOVE_RIGHT: Move_Right(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); break;
-		case MOVE_LEFT: Move_Left(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); ; break;
-		case ENTER: Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); break;
+		case MOVE_UP: Move_Up(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_DOWN: Move_Down(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_RIGHT: Move_Right(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_LEFT: Move_Left(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); ; control = Сheck_for_Loss(grid, SIZE); break;
+		case ENTER: Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
 		}
 	} while (control != ESC);
 }
@@ -79,10 +80,18 @@ void Print_Grid(int grid[SIZE][SIZE], int SIZE)
 
 void Block_Generation(int grid[SIZE][SIZE], int SIZE)
 {	
-	int position_i = rand() % 4;
-	int position_j = rand() % 4;
-	int block = (rand() % 10) <= 0 ? 4 : 2;
-	if (grid[position_i][position_j]==0) grid[position_i][position_j] = block;
+	bool set = true;
+	do
+	{
+		int position_i = rand() % 4;
+		int position_j = rand() % 4;
+		int block = (rand() % 10) <= 0 ? 4 : 2;
+		if (grid[position_i][position_j] == 0)
+		{
+			grid[position_i][position_j] = block; 
+			set = false;
+		}
+	} while (set);
 }
 
 void Move_Up(int grid[SIZE][SIZE], int SIZE)
@@ -97,8 +106,9 @@ void Move_Up(int grid[SIZE][SIZE], int SIZE)
 				{
 					grid[i - 1][j] += grid[i][j];
 					grid[i][j] = 0;
+					continue;
 				}
-				if (grid[i - 1][j] == 0)
+				else if (grid[i - 1][j] == 0)
 				{
 					grid[i - 1][j] ^= grid[i][j];
 					grid[i][j] ^= grid[i - 1][j];
@@ -121,7 +131,7 @@ void Move_Down(int grid[SIZE][SIZE], int SIZE)
 					grid[i + 1][j] += grid[i][j];
 					grid[i][j] = 0;
 				}
-				if (grid[i + 1][j] == 0)
+				else if (grid[i + 1][j] == 0)
 				{
 					grid[i + 1][j] ^= grid[i][j];
 					grid[i][j] ^= grid[i + 1][j];
@@ -144,7 +154,7 @@ void Move_Right(int grid[SIZE][SIZE], int SIZE)
 					grid[i][j+1] += grid[i][j];
 					grid[i][j] = 0;
 				}
-				if (grid[i][j+1] == 0)
+				else if (grid[i][j+1] == 0)
 				{
 					grid[i][j+1] ^= grid[i][j];
 					grid[i][j] ^= grid[i][j+1];
@@ -167,7 +177,7 @@ void Move_Left(int grid[SIZE][SIZE], int SIZE)
 					grid[i][j - 1] += grid[i][j];
 					grid[i][j] = 0;
 				}
-				if (grid[i][j - 1] == 0)
+				else if (grid[i][j - 1] == 0)
 				{
 					grid[i][j - 1] ^= grid[i][j];
 					grid[i][j] ^= grid[i][j - 1];
@@ -176,4 +186,21 @@ void Move_Left(int grid[SIZE][SIZE], int SIZE)
 			}
 		}
 	}
+}
+int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE)
+{
+
+	for (int i = 0; i < SIZE; i++)
+	{
+		for (int j = 0; j < SIZE; j++)
+		{
+			if (grid[i][j]==0)
+			{
+				return 0;
+			}
+		}
+	}
+	cout << "Играокончена!";
+	return ESC;
+
 }
