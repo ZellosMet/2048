@@ -106,7 +106,6 @@ void Move_Up(int grid[SIZE][SIZE], int SIZE)
 				{
 					grid[i - 1][j] += grid[i][j];
 					grid[i][j] = 0;
-					continue;
 				}
 				else if (grid[i - 1][j] == 0)
 				{
