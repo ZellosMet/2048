@@ -9,18 +9,52 @@ using namespace std;
 #define MOVE_UP 72
 #define MOVE_DOWN 80
 #define ENTER 13
+#define RESET 114 //82
 #define ESC 27
 
 const int SIZE = 4;
 
 void Print_Grid(int grid[SIZE][SIZE], int SIZE); // Функция вывода сетки
-void Move_Up(int grid[SIZE][SIZE], int SIZE); //Функции смещения
-void Move_Down(int grid[SIZE][SIZE], int SIZE);
-void Move_Right(int grid[SIZE][SIZE], int SIZE);
-void Move_Left(int grid[SIZE][SIZE], int SIZE);
+void Move_Up(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move); //Функции смещения
+void Move_Down(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move);
+void Move_Right(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move);
+void Move_Left(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move);
 int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE); //Функция проверки на проигрыш
+void Reset(int grid[SIZE][SIZE], int SIZE); //Функция рестарта
+void Block_Generation(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move); //Функция генерации новых блоков
 
-void test(int grid[SIZE][SIZE], int SIZE)
+
+void main()
+{
+	srand(time(NULL));
+	setlocale(LC_ALL, "ru");
+
+	int control;
+	bool check_move = false;
+	bool *pcheck_move = &check_move;
+	int grid[SIZE][SIZE] = {};	
+
+	Block_Generation(grid, SIZE, pcheck_move);
+	Block_Generation(grid, SIZE, pcheck_move);
+
+	Print_Grid(grid, SIZE);
+	
+	do //Цикл отлова событий
+	{
+		control = _getch();
+		switch (control)
+		{
+		case MOVE_UP: Move_Up(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_DOWN: Move_Down(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_RIGHT: Move_Right(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_LEFT: Move_Left(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); ; control = Сheck_for_Loss(grid, SIZE); break;
+		case ENTER: Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
+		case RESET: Reset(grid, SIZE); Block_Generation(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); break;
+		}
+	} while (control != ESC);
+}
+
+void Reset(int grid[SIZE][SIZE], int SIZE)
 {
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -29,35 +63,6 @@ void test(int grid[SIZE][SIZE], int SIZE)
 			grid[i][j] = 0;
 		}
 	}
-}
-
-void Block_Generation(int grid[SIZE][SIZE], int SIZE);
-
-void main()
-{
-	srand(time(NULL));
-	setlocale(LC_ALL, "ru");
-
-	int control;
-	int grid[SIZE][SIZE] = {};	
-
-	Block_Generation(grid, SIZE);
-	Block_Generation(grid, SIZE);	
-
-	Print_Grid(grid, SIZE);
-
-	do //Цикл отлова событий
-	{
-		control = _getch();
-		switch (control)
-		{
-		case MOVE_UP: Move_Up(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_DOWN: Move_Down(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_RIGHT: Move_Right(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_LEFT: Move_Left(grid, SIZE); Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); ; control = Сheck_for_Loss(grid, SIZE); break;
-		case ENTER: Block_Generation(grid, SIZE); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
-		}
-	} while (control != ESC);
 }
 
 void Print_Grid(int grid[SIZE][SIZE], int SIZE)
@@ -78,109 +83,191 @@ void Print_Grid(int grid[SIZE][SIZE], int SIZE)
 	}
 }
 
-void Block_Generation(int grid[SIZE][SIZE], int SIZE)
+void Block_Generation(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 {	
-	bool set = true;
-	do
+	if (*pcheck_move)
 	{
-		int position_i = rand() % 4;
-		int position_j = rand() % 4;
-		int block = (rand() % 10) <= 0 ? 4 : 2;
-		if (grid[position_i][position_j] == 0)
+		bool set = true;
+		do
 		{
-			grid[position_i][position_j] = block; 
-			set = false;
-		}
-	} while (set);
+			int position_i = rand() % 4;
+			int position_j = rand() % 4;
+			int block = (rand() % 10) <= 0 ? 4 : 2;
+			if (grid[position_i][position_j] == 0)
+			{
+				grid[position_i][position_j] = block; 
+				set = false;
+			}
+		} while (set);
+	}
+	*pcheck_move = false;
 }
 
-void Move_Up(int grid[SIZE][SIZE], int SIZE)
+void Move_Up(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
+{
+	for (int k = 0; k < SIZE - 1; k++)
+	{
+		for (int n = SIZE - 1; n > 0; n--)
+		{
+			for (int m = 0; m < SIZE; m++)
+			{
+				if (grid[n - 1][m] == 0)
+				{
+					grid[n - 1][m] = grid[n][m];
+					grid[n][m] = 0;
+				}
+			}
+		}
+	}
+	for (int i = 0; i < SIZE; i++)
+	{
+		for (int j = 0; j < SIZE; j++)
+		{
+			if (grid[i + 1][j] == grid[i][j])
+			{
+				grid[i][j] += grid[i+1][j];
+				grid[i+1][j] = 0;
+			}
+		}
+	}
+	for (int k = 0; k < SIZE - 1; k++)
+	{
+		for (int n = SIZE - 1; n > 0; n--)
+		{
+			for (int m = 0; m < SIZE; m++)
+			{
+				if (grid[n - 1][m] == 0)
+				{
+					grid[n - 1][m] = grid[n][m];
+					grid[n][m] = 0;
+				}
+			}
+		}
+	}
+}
+void Move_Down(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 {
 	for (int k = 0; k < SIZE-1; k++)
 	{
-		for (int i = 1; i < SIZE; i++)
+
+	for (int n = 0; n < SIZE; n++)
+	{
+		for (int m = 0; m < SIZE; m++)
 		{
-			for (int j = 0; j < SIZE; j++)
+			if (grid[n + 1][m] == 0)
 			{
-				if (grid[i - 1][j] == grid[i][j])
+				grid[n + 1][m] = grid[n][m];
+				grid[n][m] = 0;
+			}
+		}
+	}
+	}
+	for (int i = SIZE-1; i > 0; i--)
+	{
+		for (int j = 0; j < SIZE; j++)
+		{
+			if (grid[i - 1][j] == grid[i][j])
+			{
+				grid[i][j] += grid[i - 1][j];
+				grid[i - 1][j] = 0;
+			}
+		}
+	}
+	for (int k = 0; k < SIZE-1; k++)
+	{
+
+	for (int n = 0; n < SIZE; n++)
+	{
+		for (int m = 0; m < SIZE; m++)
+		{
+			if (grid[n + 1][m] == 0)
+			{
+				grid[n + 1][m] = grid[n][m];
+				grid[n][m] = 0;
+			}
+		}
+	}
+	}
+}
+void Move_Right(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
+{
+	for (int k = 0; k < SIZE - 1; k++)
+	{
+		for (int n = 0; n < SIZE; n++)
+		{
+			for (int m = 0; m < SIZE - 1; m++)
+			{
+				if (grid[n][m + 1] == 0)
 				{
-					grid[i - 1][j] += grid[i][j];
-					grid[i][j] = 0;
+					grid[n][m + 1] = grid[n][m];
+					grid[n][m] = 0;
 				}
-				else if (grid[i - 1][j] == 0)
+			}
+		}
+	}
+	for (int i = 0; i < SIZE; i++)
+	{
+		for (int j = SIZE - 1; j > 0; j--)
+		{
+			if (grid[i][j - 1] == grid[i][j])
+			{
+				grid[i][j] += grid[i][j - 1];
+				grid[i][j - 1] = 0;
+			}
+		}
+	}
+	for (int k = 0; k < SIZE - 1; k++)
+	{
+		for (int n = 0; n < SIZE; n++)
+		{
+			for (int m = 0; m < SIZE - 1; m++)
+			{
+				if (grid[n][m + 1] == 0)
 				{
-					grid[i - 1][j] ^= grid[i][j];
-					grid[i][j] ^= grid[i - 1][j];
-					grid[i - 1][j] ^= grid[i][j];
+					grid[n][m + 1] = grid[n][m];
+					grid[n][m] = 0;
 				}
 			}
 		}
 	}
 }
-void Move_Down(int grid[SIZE][SIZE], int SIZE)
+void Move_Left(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 {
 	for (int k = 0; k < SIZE - 1; k++)
 	{
-		for (int i = SIZE-2; i >= 0; i--)
+		for (int n = 0; n < SIZE; n++)
 		{
-			for (int j = SIZE-1; j >= 0; j--)
+			for (int m = SIZE - 1; m > 0; m--)
 			{
-				if (grid[i + 1][j] == grid[i][j])
+				if (grid[n][m - 1] == 0)
 				{
-					grid[i + 1][j] += grid[i][j];
-					grid[i][j] = 0;
-				}
-				else if (grid[i + 1][j] == 0)
-				{
-					grid[i + 1][j] ^= grid[i][j];
-					grid[i][j] ^= grid[i + 1][j];
-					grid[i + 1][j] ^= grid[i][j];
+					grid[n][m - 1] = grid[n][m];
+					grid[n][m] = 0;
 				}
 			}
 		}
 	}
-}
-void Move_Right(int grid[SIZE][SIZE], int SIZE)
-{
-	for (int k = 0; k < SIZE - 1; k++)
+	for (int i = 0; i < SIZE; i++)
 	{
-		for (int i = 0; i < SIZE; i++)
+		for (int j = 0; j < SIZE; j++)
 		{
-			for (int j = SIZE-2; j >=0 ; j--)
+			if (grid[i][j+1] == grid[i][j])
 			{
-				if (grid[i][j+1] == grid[i][j])
-				{
-					grid[i][j+1] += grid[i][j];
-					grid[i][j] = 0;
-				}
-				else if (grid[i][j+1] == 0)
-				{
-					grid[i][j+1] ^= grid[i][j];
-					grid[i][j] ^= grid[i][j+1];
-					grid[i][j+1] ^= grid[i][j];
-				}
+				grid[i][j] += grid[i][j+1];
+				grid[i][j+1] = 0;
 			}
 		}
 	}
-}
-void Move_Left(int grid[SIZE][SIZE], int SIZE)
-{
 	for (int k = 0; k < SIZE - 1; k++)
 	{
-		for (int i = 0; i < SIZE; i++)
+		for (int n = 0; n < SIZE; n++)
 		{
-			for (int j = 1; j < SIZE; j++)
+			for (int m = SIZE - 1; m > 0; m--)
 			{
-				if (grid[i][j - 1] == grid[i][j])
+				if (grid[n][m - 1] == 0)
 				{
-					grid[i][j - 1] += grid[i][j];
-					grid[i][j] = 0;
-				}
-				else if (grid[i][j - 1] == 0)
-				{
-					grid[i][j - 1] ^= grid[i][j];
-					grid[i][j] ^= grid[i][j - 1];
-					grid[i][j - 1] ^= grid[i][j];
+					grid[n][m - 1] = grid[n][m];
+					grid[n][m] = 0;
 				}
 			}
 		}
