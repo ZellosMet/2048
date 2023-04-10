@@ -13,17 +13,17 @@ using namespace std;
 
 const int SIZE = 4;
 
-void Print_Grid(int grid[SIZE][SIZE], int SIZE); // Функция вывода сетки
-void Fusion_Up(int grid[SIZE][SIZE], int SIZE); //Функции слияния блоков одного номинала
-void Fusion_Down(int grid[SIZE][SIZE], int SIZE);
-void Fusion_Right(int grid[SIZE][SIZE], int SIZE);
-void Fusion_Left(int grid[SIZE][SIZE], int SIZE);
+void Print_Grid(int grid[SIZE][SIZE], int SIZE, int *pscore); // Функция вывода сетки
+void Fusion_Up(int grid[SIZE][SIZE], int SIZE, int *pscore); //Функции слияния блоков одного номинала
+void Fusion_Down(int grid[SIZE][SIZE], int SIZE, int *pscore);
+void Fusion_Right(int grid[SIZE][SIZE], int SIZE, int *pscore);
+void Fusion_Left(int grid[SIZE][SIZE], int SIZE, int *pscore);
 void Shift_Up(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move); //Функция смещения блоков
 void Shift_Down(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move);
 void Shift_Right(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move);
 void Shift_Left(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move);
 int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE); //Функция проверки на проигрыш
-void Reset(int grid[SIZE][SIZE], int SIZE); //Функция рестарта
+void Reset(int grid[SIZE][SIZE], int SIZE, int *pscore); //Функция рестарта
 void Block_Generation(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move); //Функция генерации новых блоков
 
 
@@ -32,6 +32,8 @@ void main()
 	srand(time(NULL));
 	setlocale(LC_ALL, "ru");
 
+	int score = 0;
+	int *pscore = &score;
 	int control;
 	bool check_move = true;
 	bool *pcheck_move = &check_move;
@@ -41,23 +43,23 @@ void main()
 	check_move = true;
 	Block_Generation(grid, SIZE, pcheck_move);
 
-	Print_Grid(grid, SIZE);
-	cout << "Управление: стрелочками производится смещение блоков, r - рестарт, ESC - Выход";
+	Print_Grid(grid, SIZE, pscore);
+	cout << "\nУправление: стрелочками производится смещение блоков, r - рестарт, ESC - Выход";
 	do //Цикл отлова событий
 	{
 		control = _getch();
 		switch (control)
 		{
-		case MOVE_UP: Shift_Up(grid, SIZE, pcheck_move); Fusion_Up(grid, SIZE); Shift_Up(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_DOWN: Shift_Down(grid, SIZE, pcheck_move); Fusion_Down(grid, SIZE); Shift_Down(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_RIGHT:Shift_Right(grid, SIZE, pcheck_move); Fusion_Right(grid, SIZE); Shift_Right(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_LEFT: Shift_Left(grid, SIZE, pcheck_move); Fusion_Left(grid, SIZE); Shift_Left(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); control = Сheck_for_Loss(grid, SIZE); break;
-		case RESET: Reset(grid, SIZE); Block_Generation(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE); break;
+		case MOVE_UP: Shift_Up(grid, SIZE, pcheck_move); Fusion_Up(grid, SIZE, pscore); Shift_Up(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_DOWN: Shift_Down(grid, SIZE, pcheck_move); Fusion_Down(grid, SIZE, pscore); Shift_Down(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_RIGHT:Shift_Right(grid, SIZE, pcheck_move); Fusion_Right(grid, SIZE, pscore); Shift_Right(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_LEFT: Shift_Left(grid, SIZE, pcheck_move); Fusion_Left(grid, SIZE, pscore); Shift_Left(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
+		case RESET: Reset(grid, SIZE, pscore); Block_Generation(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); break;
 		}
 	} while (control != ESC);
 }
 
-void Reset(int grid[SIZE][SIZE], int SIZE)
+void Reset(int grid[SIZE][SIZE], int SIZE, int *pscore)
 {
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -66,9 +68,10 @@ void Reset(int grid[SIZE][SIZE], int SIZE)
 			grid[i][j] = 0;
 		}
 	}
+	*pscore = 0;
 }
 
-void Print_Grid(int grid[SIZE][SIZE], int SIZE)
+void Print_Grid(int grid[SIZE][SIZE], int SIZE, int *pscore)
 {
 	system("cls");
 	for (int i = 0; i < SIZE; i++)
@@ -84,6 +87,7 @@ void Print_Grid(int grid[SIZE][SIZE], int SIZE)
 		}
 		cout << endl;
 	}
+	cout << "\t    Счёт: " << *pscore << endl;
 }
 
 void Block_Generation(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
@@ -106,7 +110,7 @@ void Block_Generation(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 	*pcheck_move = false;
 }
 
-void Fusion_Up(int grid[SIZE][SIZE], int SIZE)
+void Fusion_Up(int grid[SIZE][SIZE], int SIZE, int *pscore)
 {
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -116,11 +120,12 @@ void Fusion_Up(int grid[SIZE][SIZE], int SIZE)
 			{
 				grid[i][j] += grid[i+1][j];
 				grid[i+1][j] = 0;
+				*pscore += grid[i][j];
 			}
 		}
 	}
 }
-void Fusion_Down(int grid[SIZE][SIZE], int SIZE)
+void Fusion_Down(int grid[SIZE][SIZE], int SIZE, int *pscore)
 {
 	for (int i = SIZE - 1; i > 0; i--)
 	{
@@ -130,11 +135,12 @@ void Fusion_Down(int grid[SIZE][SIZE], int SIZE)
 			{
 				grid[i][j] += grid[i - 1][j];
 				grid[i - 1][j] = 0;
+				*pscore += grid[i][j];
 			}
 		}
 	}
 }
-void Fusion_Right(int grid[SIZE][SIZE], int SIZE)
+void Fusion_Right(int grid[SIZE][SIZE], int SIZE, int *pscore)
 {
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -144,11 +150,12 @@ void Fusion_Right(int grid[SIZE][SIZE], int SIZE)
 			{
 				grid[i][j] += grid[i][j - 1];
 				grid[i][j - 1] = 0;
+				*pscore += grid[i][j];
 			}
 		}
 	}
 }
-void Fusion_Left(int grid[SIZE][SIZE], int SIZE)
+void Fusion_Left(int grid[SIZE][SIZE], int SIZE, int *pscore)
 {
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -158,6 +165,7 @@ void Fusion_Left(int grid[SIZE][SIZE], int SIZE)
 			{
 				grid[i][j] += grid[i][j + 1];
 				grid[i][j + 1] = 0;
+				*pscore += grid[i][j];
 			}
 		}
 	}
@@ -242,52 +250,12 @@ int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE)
 	{
 		for (int j = 0; j < SIZE; j++)
 		{
-			if (grid[i][j]==0)
+			if (grid[i][j]==0 || grid[i + 1][j] == grid[i][j] || grid[i - 1][j] == grid[i][j] || grid[i][j + 1] == grid[i][j])
 			{
 				return 0;
 			}
 		}
 	}
-	for (int i = 0; i < SIZE; i++)
-	{
-		for (int j = 0; j < SIZE; j++)
-		{
-			if (grid[i + 1][j] == grid[i][j])
-			{
-				return 0;
-			}
-		}
-	}
-	for (int i = SIZE - 1; i > 0; i--)
-	{
-		for (int j = 0; j < SIZE; j++)
-		{
-			if (grid[i - 1][j] == grid[i][j])
-			{
-				return 0;
-			}
-		}
-	}
-	for (int i = 0; i < SIZE; i++)
-	{
-		for (int j = SIZE - 1; j > 0; j--)
-		{
-			if (grid[i][j - 1] == grid[i][j])
-			{
-				return 0;
-			}
-		}
-	}
-	for (int i = 0; i < SIZE; i++)
-	{
-		for (int j = 0; j < SIZE; j++)
-		{
-			if (grid[i][j + 1] == grid[i][j])
-			{
-				return 0;
-			}
-		}
-	}
-	cout << "Играокончена!";
+	cout << "\t Играокончена!";
 	return ESC;
 }
