@@ -256,6 +256,6 @@ int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE)
 			}
 		}
 	}
-	cout << "\t Играокончена!";
+	cout << "\t Игра окончена!";
 	return ESC;
 }
