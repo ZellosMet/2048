@@ -1,10 +1,10 @@
-#include<iostream>
+п»ї#include<iostream>
 #include<conio.h>
 #include<time.h>
 
 using namespace std;
 
-#define MOVE_LEFT 75  //Задание переменных для отлова с клавиатуры
+#define MOVE_LEFT 75  //Р—Р°РґР°РЅРёРµ РїРµСЂРµРјРµРЅРЅС‹С… РґР»СЏ РѕС‚Р»РѕРІР° СЃ РєР»Р°РІРёР°С‚СѓСЂС‹
 #define MOVE_RIGHT 77
 #define MOVE_UP 72
 #define MOVE_DOWN 80
@@ -13,18 +13,18 @@ using namespace std;
 
 const int SIZE = 4;
 
-void Print_Grid(int grid[SIZE][SIZE], int SIZE, int *pscore); // Функция вывода сетки
-void Fusion_Up(int grid[SIZE][SIZE], int SIZE, int *pscore); //Функции слияния блоков одного номинала
+void Print_Grid(int grid[SIZE][SIZE], int SIZE, int *pscore); // Р¤СѓРЅРєС†РёСЏ РІС‹РІРѕРґР° СЃРµС‚РєРё
+void Fusion_Up(int grid[SIZE][SIZE], int SIZE, int *pscore); //Р¤СѓРЅРєС†РёРё СЃР»РёСЏРЅРёСЏ Р±Р»РѕРєРѕРІ РѕРґРЅРѕРіРѕ РЅРѕРјРёРЅР°Р»Р°
 void Fusion_Down(int grid[SIZE][SIZE], int SIZE, int *pscore);
 void Fusion_Right(int grid[SIZE][SIZE], int SIZE, int *pscore);
 void Fusion_Left(int grid[SIZE][SIZE], int SIZE, int *pscore);
-void Shift_Up(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move); //Функция смещения блоков
+void Shift_Up(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move); //Р¤СѓРЅРєС†РёСЏ СЃРјРµС‰РµРЅРёСЏ Р±Р»РѕРєРѕРІ
 void Shift_Down(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move);
 void Shift_Right(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move);
 void Shift_Left(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move);
-int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE); //Функция проверки на проигрыш
-void Reset(int grid[SIZE][SIZE], int SIZE, int *pscore); //Функция рестарта
-void Block_Generation(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move); //Функция генерации новых блоков
+int РЎheck_for_Loss(int grid[SIZE][SIZE], int SIZE); //Р¤СѓРЅРєС†РёСЏ РїСЂРѕРІРµСЂРєРё РЅР° РїСЂРѕРёРіСЂС‹С€
+void Reset(int grid[SIZE][SIZE], int SIZE, int *pscore); //Р¤СѓРЅРєС†РёСЏ СЂРµСЃС‚Р°СЂС‚Р°
+void Block_Generation(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move); //Р¤СѓРЅРєС†РёСЏ РіРµРЅРµСЂР°С†РёРё РЅРѕРІС‹С… Р±Р»РѕРєРѕРІ
 
 
 void main()
@@ -44,16 +44,16 @@ void main()
 	Block_Generation(grid, SIZE, pcheck_move);
 
 	Print_Grid(grid, SIZE, pscore);
-	cout << "\nУправление: стрелочками производится смещение блоков, r - рестарт, ESC - Выход";
-	do //Цикл отлова событий
+	cout << "\nРЈРїСЂР°РІР»РµРЅРёРµ: СЃС‚СЂРµР»РѕС‡РєР°РјРё РїСЂРѕРёР·РІРѕРґРёС‚СЃСЏ СЃРјРµС‰РµРЅРёРµ Р±Р»РѕРєРѕРІ, r - СЂРµСЃС‚Р°СЂС‚, ESC - Р’С‹С…РѕРґ";
+	do //Р¦РёРєР» РѕС‚Р»РѕРІР° СЃРѕР±С‹С‚РёР№
 	{
 		control = _getch();
 		switch (control)
 		{
-		case MOVE_UP: Shift_Up(grid, SIZE, pcheck_move); Fusion_Up(grid, SIZE, pscore); Shift_Up(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_DOWN: Shift_Down(grid, SIZE, pcheck_move); Fusion_Down(grid, SIZE, pscore); Shift_Down(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_RIGHT:Shift_Right(grid, SIZE, pcheck_move); Fusion_Right(grid, SIZE, pscore); Shift_Right(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_LEFT: Shift_Left(grid, SIZE, pcheck_move); Fusion_Left(grid, SIZE, pscore); Shift_Left(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
+		case MOVE_UP: Shift_Up(grid, SIZE, pcheck_move); Fusion_Up(grid, SIZE, pscore); Shift_Up(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = РЎheck_for_Loss(grid, SIZE); break;
+		case MOVE_DOWN: Shift_Down(grid, SIZE, pcheck_move); Fusion_Down(grid, SIZE, pscore); Shift_Down(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = РЎheck_for_Loss(grid, SIZE); break;
+		case MOVE_RIGHT:Shift_Right(grid, SIZE, pcheck_move); Fusion_Right(grid, SIZE, pscore); Shift_Right(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = РЎheck_for_Loss(grid, SIZE); break;
+		case MOVE_LEFT: Shift_Left(grid, SIZE, pcheck_move); Fusion_Left(grid, SIZE, pscore); Shift_Left(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = РЎheck_for_Loss(grid, SIZE); break;
 		case RESET: Reset(grid, SIZE, pscore); Block_Generation(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); break;
 		}
 	} while (control != ESC);
@@ -87,14 +87,14 @@ void Print_Grid(int grid[SIZE][SIZE], int SIZE, int *pscore)
 		}
 		cout << endl;
 	}
-	cout << "\t    Счёт: " << *pscore << endl;
+	cout << "\t    РЎС‡С‘С‚: " << *pscore << endl;
 }
 
 void Block_Generation(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 {	
-	if (*pcheck_move) //Проверка на смещение блоков
+	if (*pcheck_move) //РџСЂРѕРІРµСЂРєР° РЅР° СЃРјРµС‰РµРЅРёРµ Р±Р»РѕРєРѕРІ
 	{
-		bool set = true; // Проверка на фактическую установку блока
+		bool set = true; // РџСЂРѕРІРµСЂРєР° РЅР° С„Р°РєС‚РёС‡РµСЃРєСѓСЋ СѓСЃС‚Р°РЅРѕРІРєСѓ Р±Р»РѕРєР°
 		do
 		{
 			int position_i = rand() % 4;
@@ -244,7 +244,7 @@ void Shift_Left(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move)
 	}
 }
 
-int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE)
+int РЎheck_for_Loss(int grid[SIZE][SIZE], int SIZE)
 {
 	for (int i = 0; i < SIZE; i++)
 	{
@@ -256,6 +256,6 @@ int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE)
 			}
 		}
 	}
-	cout << "\t Играокончена!";
+	cout << "\t РРіСЂР°РѕРєРѕРЅС‡РµРЅР°!";
 	return ESC;
 }
