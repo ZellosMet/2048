@@ -30,11 +30,12 @@ void main()
 	setlocale(LC_ALL, "ru");
 
 	int control;
-	bool check_move = false;
+	bool check_move = true;
 	bool *pcheck_move = &check_move;
 	int grid[SIZE][SIZE] = {};	
 
 	Block_Generation(grid, SIZE, pcheck_move);
+	check_move = true;
 	Block_Generation(grid, SIZE, pcheck_move);
 
 	Print_Grid(grid, SIZE);
@@ -111,10 +112,11 @@ void Move_Up(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 		{
 			for (int m = 0; m < SIZE; m++)
 			{
-				if (grid[n - 1][m] == 0)
+				if (grid[n - 1][m] == 0 && grid[n][m] != 0)
 				{
 					grid[n - 1][m] = grid[n][m];
 					grid[n][m] = 0;
+					*pcheck_move = true;
 				}
 			}
 		}
@@ -136,10 +138,11 @@ void Move_Up(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 		{
 			for (int m = 0; m < SIZE; m++)
 			{
-				if (grid[n - 1][m] == 0)
+				if (grid[n - 1][m] == 0 && grid[n][m] != 0)
 				{
 					grid[n - 1][m] = grid[n][m];
 					grid[n][m] = 0;
+					*pcheck_move = true;
 				}
 			}
 		}
@@ -154,10 +157,11 @@ void Move_Down(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 	{
 		for (int m = 0; m < SIZE; m++)
 		{
-			if (grid[n + 1][m] == 0)
+			if (grid[n + 1][m] == 0 && grid[n][m] != 0)
 			{
 				grid[n + 1][m] = grid[n][m];
 				grid[n][m] = 0;
+				*pcheck_move = true;
 			}
 		}
 	}
@@ -180,10 +184,11 @@ void Move_Down(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 	{
 		for (int m = 0; m < SIZE; m++)
 		{
-			if (grid[n + 1][m] == 0)
+			if (grid[n + 1][m] == 0 && grid[n][m] != 0)
 			{
 				grid[n + 1][m] = grid[n][m];
 				grid[n][m] = 0;
+				*pcheck_move = true;
 			}
 		}
 	}
@@ -197,10 +202,11 @@ void Move_Right(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 		{
 			for (int m = 0; m < SIZE - 1; m++)
 			{
-				if (grid[n][m + 1] == 0)
+				if (grid[n][m + 1] == 0 && grid[n][m] != 0)
 				{
 					grid[n][m + 1] = grid[n][m];
 					grid[n][m] = 0;
+					*pcheck_move = true;
 				}
 			}
 		}
@@ -222,10 +228,11 @@ void Move_Right(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 		{
 			for (int m = 0; m < SIZE - 1; m++)
 			{
-				if (grid[n][m + 1] == 0)
+				if (grid[n][m + 1] == 0 && grid[n][m] != 0)
 				{
 					grid[n][m + 1] = grid[n][m];
 					grid[n][m] = 0;
+					*pcheck_move = true;
 				}
 			}
 		}
@@ -239,10 +246,11 @@ void Move_Left(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 		{
 			for (int m = SIZE - 1; m > 0; m--)
 			{
-				if (grid[n][m - 1] == 0)
+				if (grid[n][m - 1] == 0 && grid[n][m] != 0)
 				{
 					grid[n][m - 1] = grid[n][m];
 					grid[n][m] = 0;
+					*pcheck_move = true;
 				}
 			}
 		}
@@ -264,10 +272,11 @@ void Move_Left(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move)
 		{
 			for (int m = SIZE - 1; m > 0; m--)
 			{
-				if (grid[n][m - 1] == 0)
+				if (grid[n][m - 1] == 0 && grid[n][m] != 0)
 				{
 					grid[n][m - 1] = grid[n][m];
 					grid[n][m] = 0;
+					*pcheck_move = true;
 				}
 			}
 		}
