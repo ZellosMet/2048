@@ -50,11 +50,39 @@ void main()
 		control = _getch();
 		switch (control)
 		{
-		case MOVE_UP: Shift_Up(grid, SIZE, pcheck_move); Fusion_Up(grid, SIZE, pscore); Shift_Up(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_DOWN: Shift_Down(grid, SIZE, pcheck_move); Fusion_Down(grid, SIZE, pscore); Shift_Down(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_RIGHT:Shift_Right(grid, SIZE, pcheck_move); Fusion_Right(grid, SIZE, pscore); Shift_Right(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
-		case MOVE_LEFT: Shift_Left(grid, SIZE, pcheck_move); Fusion_Left(grid, SIZE, pscore); Shift_Left(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); control = Сheck_for_Loss(grid, SIZE); break;
-		case RESET: Reset(grid, SIZE, pscore); Block_Generation(grid, SIZE, pcheck_move); Block_Generation(grid, SIZE, pcheck_move); Print_Grid(grid, SIZE, pscore); break;
+		case MOVE_UP:	Shift_Up(grid, SIZE, pcheck_move); 
+						Fusion_Up(grid, SIZE, pscore); 
+						Shift_Up(grid, SIZE, pcheck_move); 
+						Block_Generation(grid, SIZE, pcheck_move); 
+						Print_Grid(grid, SIZE, pscore); 
+						control = Сheck_for_Loss(grid, SIZE); 
+						break;
+		case MOVE_DOWN: Shift_Down(grid, SIZE, pcheck_move); 
+						Fusion_Down(grid, SIZE, pscore); 
+						Shift_Down(grid, SIZE, pcheck_move); 
+						Block_Generation(grid, SIZE, pcheck_move); 
+						Print_Grid(grid, SIZE, pscore); 
+						control = Сheck_for_Loss(grid, SIZE); 
+						break;
+		case MOVE_RIGHT:Shift_Right(grid, SIZE, pcheck_move); 
+						Fusion_Right(grid, SIZE, pscore); 
+						Shift_Right(grid, SIZE, pcheck_move); 
+						Block_Generation(grid, SIZE, pcheck_move); 
+						Print_Grid(grid, SIZE, pscore); 
+						control = Сheck_for_Loss(grid, SIZE); 
+						break;
+		case MOVE_LEFT: Shift_Left(grid, SIZE, pcheck_move); 
+						Fusion_Left(grid, SIZE, pscore); 
+						Shift_Left(grid, SIZE, pcheck_move); 
+						Block_Generation(grid, SIZE, pcheck_move); 
+						Print_Grid(grid, SIZE, pscore); 
+						control = Сheck_for_Loss(grid, SIZE); 
+						break;
+		case RESET:		Reset(grid, SIZE, pscore); 
+						Block_Generation(grid, SIZE, pcheck_move); 
+						Block_Generation(grid, SIZE, pcheck_move); 
+						Print_Grid(grid, SIZE, pscore); 
+						break;
 		}
 	} while (control != ESC);
 }
