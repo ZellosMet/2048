@@ -8,7 +8,6 @@ using namespace std;
 #define MOVE_RIGHT 77
 #define MOVE_UP 72
 #define MOVE_DOWN 80
-#define ENTER 13
 #define RESET 114
 #define ESC 27
 
@@ -43,7 +42,7 @@ void main()
 	Block_Generation(grid, SIZE, pcheck_move);
 
 	Print_Grid(grid, SIZE);
-	
+	cout << "Управление: стрелочками производится смещение блоков, r - рестарт, ESC - Выход";
 	do //Цикл отлова событий
 	{
 		control = _getch();
