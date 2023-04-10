@@ -9,6 +9,7 @@ using namespace std;
 #define MOVE_UP 72
 #define MOVE_DOWN 80
 #define RESET 114
+#define RESET_RU 170
 #define ESC 27
 
 const int SIZE = 4;
@@ -22,7 +23,7 @@ void Shift_Up(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move); //Функци
 void Shift_Down(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move);
 void Shift_Right(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move);
 void Shift_Left(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move);
-int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE); //Функция проверки на проигрыш
+int Loss_check(int grid[SIZE][SIZE], int SIZE); //Функция проверки на проигрыш
 void Reset(int grid[SIZE][SIZE], int SIZE, int *pscore); //Функция рестарта
 void Block_Generation(int grid[SIZE][SIZE], int SIZE, bool *pcheck_move); //Функция генерации новых блоков
 
@@ -55,33 +56,42 @@ void main()
 						Shift_Up(grid, SIZE, pcheck_move); 
 						Block_Generation(grid, SIZE, pcheck_move); 
 						Print_Grid(grid, SIZE, pscore); 
-						control = Сheck_for_Loss(grid, SIZE); 
+						control = Loss_check(grid, SIZE);
 						break;
 		case MOVE_DOWN: Shift_Down(grid, SIZE, pcheck_move); 
 						Fusion_Down(grid, SIZE, pscore); 
 						Shift_Down(grid, SIZE, pcheck_move); 
 						Block_Generation(grid, SIZE, pcheck_move); 
 						Print_Grid(grid, SIZE, pscore); 
-						control = Сheck_for_Loss(grid, SIZE); 
+						control = Loss_check(grid, SIZE);
 						break;
 		case MOVE_RIGHT:Shift_Right(grid, SIZE, pcheck_move); 
 						Fusion_Right(grid, SIZE, pscore); 
 						Shift_Right(grid, SIZE, pcheck_move); 
 						Block_Generation(grid, SIZE, pcheck_move); 
 						Print_Grid(grid, SIZE, pscore); 
-						control = Сheck_for_Loss(grid, SIZE); 
+						control = Loss_check(grid, SIZE);
 						break;
 		case MOVE_LEFT: Shift_Left(grid, SIZE, pcheck_move); 
 						Fusion_Left(grid, SIZE, pscore); 
 						Shift_Left(grid, SIZE, pcheck_move); 
 						Block_Generation(grid, SIZE, pcheck_move); 
 						Print_Grid(grid, SIZE, pscore); 
-						control = Сheck_for_Loss(grid, SIZE); 
+						control = Loss_check(grid, SIZE);
 						break;
 		case RESET:		Reset(grid, SIZE, pscore); 
+						check_move = true;
 						Block_Generation(grid, SIZE, pcheck_move); 
+						check_move = true;
 						Block_Generation(grid, SIZE, pcheck_move); 
 						Print_Grid(grid, SIZE, pscore); 
+						break;
+		case RESET_RU:	Reset(grid, SIZE, pscore);
+						check_move = true;
+						Block_Generation(grid, SIZE, pcheck_move);
+						check_move = true;
+						Block_Generation(grid, SIZE, pcheck_move);
+						Print_Grid(grid, SIZE, pscore);
 						break;
 		}
 	} while (control != ESC);
@@ -272,7 +282,7 @@ void Shift_Left(int grid[SIZE][SIZE], int SIZE, bool* pcheck_move)
 	}
 }
 
-int Сheck_for_Loss(int grid[SIZE][SIZE], int SIZE)
+int Loss_check(int grid[SIZE][SIZE], int SIZE)
 {
 	for (int i = 0; i < SIZE; i++)
 	{
